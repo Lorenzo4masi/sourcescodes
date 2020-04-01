@@ -9,13 +9,14 @@ altrimenti
 #include <stdlib.h>
 #include <time.h>
 #include "tic_tac_toe.h"
+
 int mat[3][3];
 int coord[4];
 int end = N;
 int first = Y;
 
 
-int main()
+void main()
 {
     srand(time(NULL));
     while (end == N)
@@ -26,7 +27,7 @@ int main()
     }
 }
 
-int turno_giocatore(void)
+void turno_giocatore(void)
 {
     int i = 0;
     char input[2];
@@ -41,10 +42,9 @@ int turno_giocatore(void)
             input[0] |= 32;
         mat[input[0] - 'a'][input[1] - '1'] = 1;
     }
-}
-
+} 
                     /* CONTROLLA LA VITTORIA, LA SCONFITTA, LA POSSIBILITA' DI FARE PUNTO O DI PIAZZARE SIA DEL GIOCATORE CHE DELLA MACCHINA */
-int somma(int type,int onetime,int check)
+int somma(const int type,int onetime,const int check)
 {
     int somma = 0;
     int spazi = 0;
@@ -57,8 +57,8 @@ int somma(int type,int onetime,int check)
     {
         if (type == C)
             somma = -3;
-        else
-            somma = 3; 
+        else   
+            somma = 3;
         spazi = 0;
         onetime = Y;
     }
@@ -67,7 +67,10 @@ int somma(int type,int onetime,int check)
         if (type == C)
             somma = -2;
         else
+        {    
             somma = 2;
+            onetime = Y;
+        }
         spazi = 1;
     }
 
@@ -133,7 +136,7 @@ int somma(int type,int onetime,int check)
             }
             space = 0;
                     /* CONSIDERA LE OPZIONI DELLA CHIAMATA PER USCIRE */
-            if (type == P || onetime == Y)
+            if (onetime == Y)
                 return N;
                     /* RIPETE IL PROCEDIMENTO CON SOMMA = +-1 E SPAZI = 2 ,POI CON SOMMA = 0 E SPAZI = 1 */
             ++count;
@@ -147,7 +150,7 @@ int somma(int type,int onetime,int check)
     return N;
 }  
                     /* TURNO DEL COMPUTER*/
-int turno_computer(void)
+void turno_computer(void)
 {
     int i = 0;
     int a = 0;
@@ -161,13 +164,13 @@ int turno_computer(void)
         { 
             first = N;
             mat[1][1] = -1;
-            return 0;
+            return;
         }
         else
         {           /* OCCUPA UNO DEI 4 ANGOLI */
             first = N;
             corners(); 
-            return 0;
+            return;
         } 
     }
                     /* SE L' AVVERSARIO STA PER FARE PUNTO E COMPUTER NO, DIFENDI, ALTRIMENTI PIAZZA */
@@ -184,7 +187,7 @@ int turno_computer(void)
         stampa();
         printf("Hai vinto!\n");
         end = Y;
-        return 0;
+        return;
     }
                     /* SE LA SOMMA E' -3 IL COMPUTER HA VINTO */
     else if (somma(C,N,Y)==Y)
@@ -192,7 +195,7 @@ int turno_computer(void)
         stampa();
         printf("Hai perso\n");
         end = Y;
-        return 0;
+        return;
     }
                     /* SE NON CI SONO SPAZI VUOTI PAREGGIO */
     for (a = 0;a <= 2;++a)
@@ -204,11 +207,11 @@ int turno_computer(void)
         stampa();
         printf("Pareggio");
         end = Y;
-        return 0;
+        return;
     }
 }
                     /* STAMPA IL TIC_TAC_TOE */
-int stampa(void)
+void stampa(void)
 {
     int y = 0;
     int x = 0;
@@ -231,7 +234,7 @@ int stampa(void)
 }
 
                     /* IMPOSTA IL CURSORE NEL PRIMO PUNTO VUOTO IN COORD */
-int imposta(void)
+void imposta(void)
 {
     int i = 0;
     int a = 0;
@@ -242,7 +245,7 @@ int imposta(void)
             if (mat[coord[0]][i] == 0)
             {
                 mat[coord[0]][i] = -1;
-                return 0;
+                return;
             }
     }
                     /* CERCA IN TUTTE LE STRISCE VERTICALI */
@@ -252,7 +255,7 @@ int imposta(void)
             if (mat[i][coord[1]] == 0)
             {
                 mat[i][coord[1]] = -1;
-                return 0;
+                return;
             }
     }
                     /* CERCA NELLA DIAGONALE 1 */
@@ -262,7 +265,7 @@ int imposta(void)
         if (mat[i][i] == 0)
         {
             mat[i][i] = -1;
-            return 0;
+            return;
         }
     }
                     /* CERCA NELLA DIAGONALE 2 */
@@ -272,13 +275,13 @@ int imposta(void)
         if (mat[a][i] == 0)
         {
             mat[a][i] = -1;
-            return 0;
+            return;
         }
     }
 }
 
                     /* OCCUPA UNO DEI 4 ANGOLI */
-int corners(void)
+void corners(void)
 {
     int x = rand() % 100;
     srand(time(NULL));
